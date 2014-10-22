@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Texts and data extracted from wikipedia, licensed CC-BY-SA -->
+<catalog>
+   <book id="bk5">
+      <author>Hergé</author>
+      <title>The Blue Lotus</title>
+      <original>Le Lotus bleu</original>
+      <published>
+        <album type="bw">1936</album>
+        <album type="color">1946</album>
+      </published>
+      <description>Staying at the palace of the Maharaja of Gaipajama in India,
+      Tintin is approached by a visitor from Shanghai in China.</description>
+   </book>
+   <book id="bk7">
+      <author>Hergé</author>
+      <title>The Black Island</title>
+      <!-- uninteresting comment... -->
+      <original>L'Île noire</original>
+      <published>
+        <album type="bw">1938</album>
+        <album type="color">1943</album>
+        <album type="color" republished="yes">1966</album>
+      </published>
+      <description>Tintin discovers a plane stranded in the Belgian countryside,
+      offers to help, but is shot by the pilot.</description>
+   </book>
+   <book id="bk11">
+      <author>Hergé</author>
+      <title>The Secret of the Unicorn</title>
+      <original>Le Secret de la Licorne</original>
+      <published>
+        <album>1943</album>
+      </published>
+      <description>Whilst browsing in a market in Brussels, Tintin purchases an
+      old model ship which he wishes to give to his friend Captain Haddock as a
+      gift.</description>
+   </book>
+   <book id="bk16">
+      <author>Hergé</author>
+      <title>Destination Moon</title>
+      <original>Objectif Lune</original>
+      <published>
+        <album>1953</album>
+      </published>
+      <description>Tintin's friend Professor Calculus has been secretly commissioned
+      <!-- invisible comment -->
+      by the Syldavian government to build a rocket ship that will fly from the
+      Earth to the Moon.</description>
+   </book>
+   <book id="bk20">
+      <author>Hergé</author>
+      <title>Tintin in Tibet</title>
+      <original>Tintin au Tibet</original>
+      <published>
+        <album>1960</album>
+      </published>
+      <description><![CDATA[While on holiday at a resort in the French Alps with Snowy,
+      Captain Haddock, & Professor Calculus, <Tintin> reads about a plane crash in
+      the Gosain Than Massif in the Himalayas of Tibet.]]></description>
+   </book>
+</catalog>
