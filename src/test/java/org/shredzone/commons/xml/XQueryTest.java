@@ -95,6 +95,20 @@ public class XQueryTest {
     }
 
     /**
+     * Does {@link XQuery#allValue(String)} return the text contents of the matching
+     * elements, recursively?
+     */
+    @Test
+    public void allValueTest() throws IOException {
+        List<String> dates = xq.value("/catalog/book/published").map(String::trim).collect(toList());
+        List<String> allDates = xq.allValue("/catalog/book/published").map(String::trim).collect(toList());
+
+        assertThat(dates, contains("", "", "", "", ""));
+        assertThat(allDates, contains("1936\n        1946", "1938\n        1943\n        1966",
+                        "1943", "1953", "1960"));
+    }
+
+    /**
      * Is {@link XQuery#value(String)} non-recursive, i.e. does it only return the text
      * of the immediate children?
      */

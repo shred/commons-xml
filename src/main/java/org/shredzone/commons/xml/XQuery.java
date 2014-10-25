@@ -174,6 +174,19 @@ public class XQuery {
     }
 
     /**
+     * Selects values based on the XPath expression that is applied to the tree
+     * represented by this {@link XQuery}. In contrast to {@link #value(String)}, this
+     * method reads the element texts recursively, using {@link #allText()}.
+     *
+     * @param xpath
+     *            XPath expression
+     * @return Stream of strings containing the node values
+     */
+    public Stream<String> allValue(String xpath) {
+        return select(xpath).map(XQuery::allText);
+    }
+
+    /**
      * Returns the text selected by the XPath expression.
      *
      * @param xpath
