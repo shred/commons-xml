@@ -18,7 +18,6 @@
         <url>scm:git:git@github.com:shred/commons-xml.git</url>
         <connection>scm:git:git@github.com:shred/commons-xml.git</connection>
         <developerConnection>scm:git:git@github.com:shred/commons-xml.git</developerConnection>
-        <tag>HEAD</tag>
     </scm>
     <issueManagement>
         <system>Redmine</system>
