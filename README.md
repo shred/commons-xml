@@ -1,4 +1,4 @@
-# commons-xml ![build status](https://jenkins.shredzone.net/project/commons-xml/builds/status.png?ref=master)
+# commons-xml ![build status](https://shredzone.org/badge/commons-xml.svg)
 
 A Java library for easy XML processing.
 
@@ -32,7 +32,7 @@ String foo2 = xq.text("/config/foo2"); // World
 
 That's all!
 
-But _commons-xml_ offers a lot more possibilities. Just see the [online documentation](http://www.shredzone.org/maven/commons-xml/) for more examples.
+But _commons-xml_ offers a lot more possibilities. Just see the [online documentation](https://shredzone.org/maven/commons-xml/) for more examples.
 
 ## Contribute
 
