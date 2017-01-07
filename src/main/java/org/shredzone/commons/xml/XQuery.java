@@ -66,6 +66,13 @@ public class XQuery {
     private Map<String, String> attrMap = null;
 
     /**
+     * Private constructor for a {@link Node} element.
+     */
+    private XQuery(Node node) {
+        this.node = node;
+    }
+
+    /**
      * Parses an XML source and returns an {@link XQuery} object representing the root of
      * the document.
      *
@@ -127,15 +134,10 @@ public class XQuery {
     }
 
     /**
-     * Private constructor for a {@link Node} element.
-     */
-    private XQuery(Node node) {
-        this.node = node;
-    }
-
-    /**
      * Streams all children of this element. Children elements are represented by
      * {@link XQuery} objects as well.
+     *
+     * @return {@link Stream} of children
      */
     public Stream<XQuery> stream() {
         return new NodeListSpliterator(node.getChildNodes()).stream()
@@ -198,14 +200,14 @@ public class XQuery {
     }
 
     /**
-     * Returns this {@link XQuery} node's tag name.
+     * @return this {@link XQuery} node's tag name.
      */
     public String name() {
         return node.getNodeName();
     }
 
     /**
-     * Returns this {@link XQuery} node's text content, non recursively.
+     * @return this {@link XQuery} node's text content, non recursively.
      */
     public String text() {
         return new NodeListSpliterator(node.getChildNodes()).stream()
@@ -215,14 +217,14 @@ public class XQuery {
     }
 
     /**
-     * Returns this {@link XQuery} node's text content, recursively.
+     * @return this {@link XQuery} node's text content, recursively.
      */
     public String allText() {
         return node.getTextContent();
     }
 
     /**
-     * Returns a map of this node's attributes.
+     * @return a map of this node's attributes.
      */
     public Map<String, String> attr() {
         if (attrMap == null) {
@@ -242,6 +244,8 @@ public class XQuery {
     /**
      * Returns the parent node of this node, as {@link XQuery} object. A root node
      * returns an empty optional instead.
+     *
+     * @return parent node
      */
     public Optional<XQuery> parent() {
         if (parent == null) {

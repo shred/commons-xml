@@ -24,6 +24,8 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.List;
 
 import org.junit.Before;
@@ -44,6 +46,34 @@ public class XQueryTest {
     @Before
     public void init() throws IOException {
         xq = XQuery.parse(XQueryTest.class.getResourceAsStream("/test.xml"));
+    }
+
+    /**
+     * Test {@link Reader} based parser.
+     */
+    @Test
+    public void parserReaderTest() throws IOException {
+        try (Reader r = new InputStreamReader(XQueryTest.class.getResourceAsStream("/test.xml"))) {
+            XQuery result = XQuery.parse(r);
+            assertThat(result, is(notNullValue()));
+        }
+    }
+
+    /**
+     * Test {@link String} based parser.
+     */
+    @Test
+    public void parserStringTest() throws IOException {
+        XQuery result = XQuery.parse("<test><foo>bar</foo></test>");
+        assertThat(result, is(notNullValue()));
+    }
+
+    /**
+     * Test parser error on bad XML.
+     */
+    @Test(expected = IOException.class)
+    public void parserFailTest() throws IOException {
+        XQuery.parse(":-(");
     }
 
     /**
@@ -79,6 +109,14 @@ public class XQueryTest {
 
         assertThat(titles, contains("Le Lotus bleu", "L'Île noire",
                         "Le Secret de la Licorne", "Objectif Lune", "Tintin au Tibet"));
+    }
+
+    /**
+     * Does {@link XQuery#select(String)} fail on bad XPath?
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void selectFailTest() throws IOException {
+        xq.select(":-(");
     }
 
     /**
@@ -173,6 +211,7 @@ public class XQueryTest {
     public void attrEmptyTest() throws IOException {
         xq.select("/catalog/book/author")
                 .forEach(author -> assertThat(author.attr().keySet(), is(empty())));
+        assertThat(xq.attr().keySet(), is(empty()));
     }
 
     /**
@@ -205,9 +244,22 @@ public class XQueryTest {
      */
     @Test
     public void parentTest() throws IOException {
-        xq.select("/catalog/book/title")
-                .map(XQuery::parent)
-                .forEach(parent -> assertThat(parent.get().name(), is("book")));
+        XQuery title = xq.select("/catalog/book/title").findFirst().get();
+
+        XQuery parent = title.parent().get();
+        assertThat(parent.name(), is("book"));
+
+        // make sure parent is cached
+        XQuery parent2 = title.parent().get();
+        assertThat(parent2, is(sameInstance(parent)));
+    }
+
+    /**
+     * Does {@link XQuery#parent()} return empty on root?
+     */
+    @Test
+    public void parentOfRootTest() throws IOException {
+        assertThat(xq.parent().isPresent(), is(false));
     }
 
 }

@@ -70,6 +70,8 @@ public class NodeListSpliterator implements Spliterator<Node> {
      * <p>
      * This is a convenience call. It just invokes
      * {@link StreamSupport#stream(Spliterator, boolean)}.
+     *
+     * @return {@link Stream} of nodes
      */
     public Stream<Node> stream() {
         return StreamSupport.stream(this, false);
@@ -101,7 +103,7 @@ public class NodeListSpliterator implements Spliterator<Node> {
 
     @Override
     public long estimateSize() {
-        return end - pos;
+        return ((long) end) - ((long) pos);
     }
 
     @Override
