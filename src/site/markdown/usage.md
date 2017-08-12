@@ -41,12 +41,12 @@ This is my bookshelf inventory:
 
 ```xml
 <books>
-  <book>
+  <book id="book1">
     <author>Douglas Adams</author>
     <title>The Hitchhiker's Guide to the Galaxy</title>
     <price>7.99</price>
   </book>
-  <book>
+  <book id="book2">
     <author>Robert Shea, Robert Anton Wilson</author>
     <title>Illuminatus!</title>
     <price>20.00</price>
@@ -105,6 +105,22 @@ Three new `XQuery` calls are used here.
 `book.stream()` now streams all children elements of the book element, as `XQuery` instances. Comments and texts are skipped.
 
 `XQuery.name()` returns the element's tag name. All tag names are collected into a set, which is printed out in a final step.
+
+If you expect _exactly one_ node, you can also use `XQuery.get()`. It throws an exception if there is none, or more than one node matching the XPath expression.
+
+```java
+XQuery xq = XQuery.parse(new FileReader("bookshelf.xml"));
+XQuery book1 = xq.get("/books/book[@id='book1']");
+```
+
+Use `XQuery.exists()` to find out if there is at least one match:
+
+```java
+XQuery xq = XQuery.parse(new FileReader("bookshelf.xml"));
+if (xq.exists("/books/book[@id='book2']")) {
+  System.out.println("Yes, we have a book2!");
+}
+```
 
 ## Reading Text
 
@@ -176,5 +192,22 @@ double avg = xq.select("//temperature[contains(`month,'r')]")
 
 System.out.println(avg);
 ```
+
+## Navigating
+
+Use `XQuery.nextSibling()` and `XQuery.previousSibling()` to find the sibling elements of your current node.
+
+```java
+XQuery xq = XQuery.parse(new FileReader("bookshelf.xml"));
+XQuery book1 = xq.get("/books/book[@id='book1']");
+XQuery book2 = book1.nextSibling().get();
+System.out.println(book2.attr().get("id"); // book2
+
+if (!book1.previousSibling().isPresent()) {
+  System.out.println("There is no book before book1");
+}
+```
+
+`XQuery.root()` returns the root element of your node, in case you have lost it. With `XQuery.isRoot()`, you can find out if your current node is a root node.
 
 That was easy, wasn't it?

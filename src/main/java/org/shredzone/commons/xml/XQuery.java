@@ -150,6 +150,7 @@ public class XQuery {
      * Returns the next sibling of this element.
      *
      * @return Next sibling element
+     * @since 1.1
      */
     public Optional<XQuery> nextSibling() {
         return findElement(Node::getNextSibling);
@@ -159,6 +160,7 @@ public class XQuery {
      * Returns the previous sibling of this element.
      *
      * @return Previous sibling element
+     * @since 1.1
      */
     public Optional<XQuery> previousSibling() {
         return findElement(Node::getPreviousSibling);
@@ -184,6 +186,7 @@ public class XQuery {
      * @param xpath
      *            XPath expression
      * @return Selected node
+     * @since 1.1
      */
     public XQuery get(String xpath) {
         NodeList nl = evaluate(xpath);
@@ -205,6 +208,7 @@ public class XQuery {
      *            XPath expression
      * @return {@code true} if there is at least one element, {@code false} if there is
      *         none.
+     * @since 1.1
      */
     public boolean exists(String xpath) {
         return select(xpath).findAny().isPresent();
@@ -310,6 +314,7 @@ public class XQuery {
      * Checks if this is a root node.
      *
      * @return {@code true} if this is a root node, {@code false} if there's a parent.
+     * @since 1.1
      */
     public boolean isRoot() {
         return node.getParentNode() == null;
@@ -320,6 +325,7 @@ public class XQuery {
      * itself.
      *
      * @return root node
+     * @since 1.1
      */
     public XQuery root() {
         if (isRoot()) {
