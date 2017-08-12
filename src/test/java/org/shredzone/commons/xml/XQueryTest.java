@@ -271,4 +271,27 @@ public class XQueryTest {
         assertThat(xq.parent().isPresent(), is(false));
     }
 
+    /**
+     * Does {@link XQuery#parent()} return the correct parent node?
+     */
+    @Test
+    public void rootTest() throws IOException {
+        XQuery title = xq.select("/catalog/book/title").findFirst().get();
+        assertThat(title.isRoot(), is(false));
+        assertThat(title.name(), is("title"));
+
+        XQuery root = title.root();
+        assertThat(root.isRoot(), is(true));
+        assertThat(root.name(), is("#document"));
+    }
+
+    /**
+     * Does {@link XQuery#parent()} return empty on root?
+     */
+    @Test
+    public void rootOfRootTest() throws IOException {
+        assertThat(xq.root(), is(sameInstance(xq)));
+        assertThat(xq.isRoot(), is(true));
+    }
+
 }

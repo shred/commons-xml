@@ -271,4 +271,27 @@ public class XQuery {
         return parent;
     }
 
+    /**
+     * Checks if this is a root node.
+     *
+     * @return {@code true} if this is a root node, {@code false} if there's a parent.
+     */
+    public boolean isRoot() {
+        return node.getParentNode() == null;
+    }
+
+    /**
+     * Returns the root node of this node, as {@link XQuery} object. A root node returns
+     * itself.
+     *
+     * @return root node
+     */
+    public XQuery root() {
+        if (isRoot()) {
+            return this;
+        } else {
+            return new XQuery(node.getOwnerDocument());
+        }
+    }
+
 }
