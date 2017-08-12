@@ -173,12 +173,28 @@ public class XQuery {
      * @return Stream of selected nodes as {@link XQuery} object
      */
     public Stream<XQuery> select(String xpath) {
-        try {
-            XPathExpression expr = xpf.newXPath().compile(xpath);
-            NodeList nl = (NodeList) expr.evaluate(node, XPathConstants.NODESET);
-            return new NodeListSpliterator(nl).stream().map(XQuery::new);
-        } catch (XPathExpressionException ex) {
-            throw new IllegalArgumentException("Invalid XPath '" + xpath + "'", ex);
+        return new NodeListSpliterator(evaluate(xpath)).stream().map(XQuery::new);
+    }
+
+    /**
+     * Gets a single element based on the XPath expression that is applied to the tree
+     * represented by this {@link XQuery}. Exactly one element is expected to match the
+     * XPath expression, otherwise an exception is thrown.
+     *
+     * @param xpath
+     *            XPath expression
+     * @return Selected node
+     */
+    public XQuery get(String xpath) {
+        NodeList nl = evaluate(xpath);
+        if (nl.getLength() == 1) {
+            return new XQuery(nl.item(0));
+        } else if (nl.getLength() == 0) {
+            throw new IllegalArgumentException("XPath '" + xpath
+                + "' does not match any elements");
+        } else {
+            throw new IllegalArgumentException("XPath '" + xpath + "' matches "
+                + nl.getLength() + " elements");
         }
     }
 
@@ -310,6 +326,24 @@ public class XQuery {
             return this;
         } else {
             return new XQuery(node.getOwnerDocument());
+        }
+    }
+
+    /**
+     * Evaluates the XPath expression and returns a list of nodes.
+     *
+     * @param xpath
+     *            XPath expression
+     * @return {@link NodeList} matching the expression
+     * @throws IllegalArgumentException
+     *             if the XPath expression was invalid
+     */
+    private NodeList evaluate(String xpath) {
+        try {
+            XPathExpression expr = xpf.newXPath().compile(xpath);
+            return (NodeList) expr.evaluate(node, XPathConstants.NODESET);
+        } catch (XPathExpressionException ex) {
+            throw new IllegalArgumentException("Invalid XPath '" + xpath + "'", ex);
         }
     }
 

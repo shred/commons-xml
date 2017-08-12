@@ -93,7 +93,7 @@ public class XQueryTest {
      */
     @Test
     public void subStreamTest() throws IOException {
-        XQuery book7 = xq.select("//book[@id='bk7']").findFirst().get();
+        XQuery book7 = xq.get("//book[@id='bk7']");
         List<String> tags = book7.stream().map(XQuery::name).collect(toList());
 
         assertThat(tags, contains("author", "title", "original", "published", "description"));
@@ -112,12 +112,38 @@ public class XQueryTest {
     }
 
     /**
+     * Does {@link XQuery#get(String)} return a single element?
+     */
+    @Test
+    public void getTest() throws IOException {
+        XQuery book11 = xq.get("//book[@id='bk11']");
+        assertThat(book11.attr().get("id"), is("bk11"));
+    }
+
+    /**
+     * Does {@link XQuery#get(String)} throw an exception if there is no such element?
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getNoneFailTest() throws IOException {
+        xq.get("//book[@id='bk9']");
+    }
+
+    /**
+     * Does {@link XQuery#get(String)} throw an exception if multiple elements are
+     * found?
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void getMultipleFailTest() throws IOException {
+        xq.get("//book");
+    }
+
+    /**
      * Does {@link XQuery#previousSibling()} and {@link XQuery#nextSibling()} return
      * the correct siblings?
      */
     @Test
     public void siblingTest() throws IOException {
-        XQuery book7 = xq.select("//book[@id='bk7']").findFirst().get();
+        XQuery book7 = xq.get("//book[@id='bk7']");
 
         XQuery book5 = book7.previousSibling().get();
         assertThat(book5.attr().get("id"), is("bk5"));
@@ -276,7 +302,7 @@ public class XQueryTest {
      */
     @Test
     public void parentTest() throws IOException {
-        XQuery title = xq.select("/catalog/book/title").findFirst().get();
+        XQuery title = xq.get("/catalog/book[@id='bk11']/title");
 
         XQuery parent = title.parent().get();
         assertThat(parent.name(), is("book"));
@@ -299,7 +325,7 @@ public class XQueryTest {
      */
     @Test
     public void rootTest() throws IOException {
-        XQuery title = xq.select("/catalog/book/title").findFirst().get();
+        XQuery title = xq.get("/catalog/book[@id='bk11']/title");
         assertThat(title.isRoot(), is(false));
         assertThat(title.name(), is("title"));
 
