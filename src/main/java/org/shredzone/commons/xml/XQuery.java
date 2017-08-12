@@ -164,6 +164,18 @@ public class XQuery {
     }
 
     /**
+     * Checks if there is at least one element matching the XPath expression.
+     *
+     * @param xpath
+     *            XPath expression
+     * @return {@code true} if there is at least one element, {@code false} if there is
+     *         none.
+     */
+    public boolean exists(String xpath) {
+        return select(xpath).findAny().isPresent();
+    }
+
+    /**
      * Selects values based on the XPath expression that is applied to the tree
      * represented by this {@link XQuery}.
      *

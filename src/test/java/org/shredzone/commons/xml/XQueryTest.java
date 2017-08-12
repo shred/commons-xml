@@ -112,6 +112,15 @@ public class XQueryTest {
     }
 
     /**
+     * Does {@link XQuery#exists(String)} return a correct answer.
+     */
+    @Test
+    public void existsTest() throws IOException {
+        assertThat(xq.exists("//book/original"), is(true));
+        assertThat(xq.exists("//catfood/brand"), is(false));
+    }
+
+    /**
      * Does {@link XQuery#select(String)} fail on bad XPath?
      */
     @Test(expected = IllegalArgumentException.class)
