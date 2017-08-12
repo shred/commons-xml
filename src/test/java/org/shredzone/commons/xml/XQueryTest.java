@@ -112,6 +112,29 @@ public class XQueryTest {
     }
 
     /**
+     * Does {@link XQuery#previousSibling()} and {@link XQuery#nextSibling()} return
+     * the correct siblings?
+     */
+    @Test
+    public void siblingTest() throws IOException {
+        XQuery book7 = xq.select("//book[@id='bk7']").findFirst().get();
+
+        XQuery book5 = book7.previousSibling().get();
+        assertThat(book5.attr().get("id"), is("bk5"));
+        assertThat(book5.previousSibling().isPresent(), is(false));
+
+        XQuery book11 = book7.nextSibling().get();
+        assertThat(book11.attr().get("id"), is("bk11"));
+
+        XQuery book16 = book11.nextSibling().get();
+        assertThat(book16.attr().get("id"), is("bk16"));
+
+        XQuery book20 = book16.nextSibling().get();
+        assertThat(book20.attr().get("id"), is("bk20"));
+        assertThat(book20.nextSibling().isPresent(), is(false));
+    }
+
+    /**
      * Does {@link XQuery#exists(String)} return a correct answer.
      */
     @Test

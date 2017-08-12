@@ -28,6 +28,7 @@ import java.io.StringReader;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -143,6 +144,24 @@ public class XQuery {
         return new NodeListSpliterator(node.getChildNodes()).stream()
                         .filter(it -> it instanceof Element)
                         .map(XQuery::new);
+    }
+
+    /**
+     * Returns the next sibling of this element.
+     *
+     * @return Next sibling element
+     */
+    public Optional<XQuery> nextSibling() {
+        return findElement(Node::getNextSibling);
+    }
+
+    /**
+     * Returns the previous sibling of this element.
+     *
+     * @return Previous sibling element
+     */
+    public Optional<XQuery> previousSibling() {
+        return findElement(Node::getPreviousSibling);
     }
 
     /**
@@ -292,6 +311,22 @@ public class XQuery {
         } else {
             return new XQuery(node.getOwnerDocument());
         }
+    }
+
+    /**
+     * Finds an Element node by applying the iterator function until another Element was
+     * found.
+     *
+     * @param iterator
+     *            Iterator to apply
+     * @return node that was found
+     */
+    private Optional<XQuery> findElement(Function<Node, Node> iterator) {
+        Node it = node;
+        do {
+            it = iterator.apply(it);
+        } while (it != null && !(it instanceof Element));
+        return Optional.ofNullable(it).map(XQuery::new);
     }
 
 }
