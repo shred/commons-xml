@@ -201,7 +201,7 @@ Use `XQuery.nextSibling()` and `XQuery.previousSibling()` to find the sibling el
 XQuery xq = XQuery.parse(new FileReader("bookshelf.xml"));
 XQuery book1 = xq.get("/books/book[@id='book1']");
 XQuery book2 = book1.nextSibling().get();
-System.out.println(book2.attr().get("id"); // book2
+System.out.println(book2.attr().get("id")); // book2
 
 if (!book1.previousSibling().isPresent()) {
   System.out.println("There is no book before book1");
