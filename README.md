@@ -1,4 +1,4 @@
-# commons-xml ![build status](https://shredzone.org/badge/commons-xml.svg) ![maven central](https://maven-badges.herokuapp.com/maven-central/org.shredzone.commons/commons-xml/badge.svg)
+# commons-xml ![build status](https://shredzone.org/badge/commons-xml.svg) ![maven central](https://shredzone.org/maven-central/org.shredzone.commons/commons-xml/badge.svg)
 
 A Java library for easy XML processing.
 
