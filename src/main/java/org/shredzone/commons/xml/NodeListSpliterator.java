@@ -24,6 +24,9 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -32,6 +35,7 @@ import org.w3c.dom.NodeList;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public class NodeListSpliterator implements Spliterator<Node> {
 
     private final NodeList list;
@@ -73,7 +77,7 @@ public class NodeListSpliterator implements Spliterator<Node> {
      *
      * @return {@link Stream} of nodes
      */
-    public Stream<Node> stream() {
+    public @Nonnull Stream<Node> stream() {
         return StreamSupport.stream(this, false);
     }
 

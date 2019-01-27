@@ -32,6 +32,9 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import javax.annotation.WillClose;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -59,6 +62,7 @@ import org.xml.sax.SAXException;
  *
  * @author Richard "Shred" Körber
  */
+@ParametersAreNonnullByDefault
 public class XQuery {
 
     private final Node node;
@@ -83,7 +87,7 @@ public class XQuery {
      * @throws IOException
      *             if the XML source could not be read or parsed for any reason
      */
-    public static XQuery parse(InputSource in) throws IOException {
+    public static @Nonnull XQuery parse(@WillClose InputSource in) throws IOException {
         try {
             DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
             return new XQuery(db.parse(in));
@@ -102,7 +106,7 @@ public class XQuery {
      * @throws IOException
      *             if the XML source could not be read or parsed for any reason
      */
-    public static XQuery parse(InputStream in) throws IOException {
+    public static @Nonnull XQuery parse(@WillClose InputStream in) throws IOException {
         return parse(new InputSource(in));
     }
 
@@ -116,7 +120,7 @@ public class XQuery {
      * @throws IOException
      *             if the XML source could not be read or parsed for any reason
      */
-    public static XQuery parse(Reader r) throws IOException {
+    public static @Nonnull XQuery parse(@WillClose Reader r) throws IOException {
         return parse(new InputSource(r));
     }
 
@@ -130,7 +134,7 @@ public class XQuery {
      * @throws IOException
      *             if the XML source could not be read or parsed for any reason
      */
-    public static XQuery parse(String xml) throws IOException {
+    public static @Nonnull XQuery parse(String xml) throws IOException {
         return parse(new StringReader(xml));
     }
 
@@ -140,7 +144,7 @@ public class XQuery {
      *
      * @return {@link Stream} of children
      */
-    public Stream<XQuery> stream() {
+    public @Nonnull Stream<XQuery> stream() {
         return new NodeListSpliterator(node.getChildNodes()).stream()
                         .filter(it -> it instanceof Element)
                         .map(XQuery::new);
@@ -152,7 +156,7 @@ public class XQuery {
      * @return Next sibling element
      * @since 1.1
      */
-    public Optional<XQuery> nextSibling() {
+    public @Nonnull Optional<XQuery> nextSibling() {
         return findElement(Node::getNextSibling);
     }
 
@@ -162,7 +166,7 @@ public class XQuery {
      * @return Previous sibling element
      * @since 1.1
      */
-    public Optional<XQuery> previousSibling() {
+    public @Nonnull Optional<XQuery> previousSibling() {
         return findElement(Node::getPreviousSibling);
     }
 
@@ -174,7 +178,7 @@ public class XQuery {
      *            XPath expression
      * @return Stream of selected nodes as {@link XQuery} object
      */
-    public Stream<XQuery> select(String xpath) {
+    public @Nonnull Stream<XQuery> select(String xpath) {
         return new NodeListSpliterator(evaluate(xpath)).stream().map(XQuery::new);
     }
 
@@ -188,7 +192,7 @@ public class XQuery {
      * @return Selected node
      * @since 1.1
      */
-    public XQuery get(String xpath) {
+    public @Nonnull XQuery get(String xpath) {
         NodeList nl = evaluate(xpath);
         if (nl.getLength() == 1) {
             return new XQuery(nl.item(0));
@@ -222,7 +226,7 @@ public class XQuery {
      *            XPath expression
      * @return Stream of strings containing the node values
      */
-    public Stream<String> value(String xpath) {
+    public @Nonnull Stream<String> value(String xpath) {
         return select(xpath).map(XQuery::text);
     }
 
@@ -235,7 +239,7 @@ public class XQuery {
      *            XPath expression
      * @return Stream of strings containing the node values
      */
-    public Stream<String> allValue(String xpath) {
+    public @Nonnull Stream<String> allValue(String xpath) {
         return select(xpath).map(XQuery::allText);
     }
 
@@ -246,21 +250,21 @@ public class XQuery {
      *            XPath expression
      * @return Text selected by the expression
      */
-    public String text(String xpath) {
+    public @Nonnull String text(String xpath) {
         return value(xpath).collect(joining());
     }
 
     /**
      * @return this {@link XQuery} node's tag name.
      */
-    public String name() {
+    public @Nonnull String name() {
         return node.getNodeName();
     }
 
     /**
      * @return this {@link XQuery} node's text content, non recursively.
      */
-    public String text() {
+    public @Nonnull String text() {
         return new NodeListSpliterator(node.getChildNodes()).stream()
                         .filter(it -> it instanceof Text)
                         .map(it -> ((Text) it).getNodeValue())
@@ -270,14 +274,14 @@ public class XQuery {
     /**
      * @return this {@link XQuery} node's text content, recursively.
      */
-    public String allText() {
+    public @Nonnull String allText() {
         return node.getTextContent();
     }
 
     /**
      * @return a map of this node's attributes.
      */
-    public Map<String, String> attr() {
+    public @Nonnull Map<String, String> attr() {
         if (attrMap == null) {
             NamedNodeMap nnm = node.getAttributes();
             if (nnm != null) {
@@ -298,7 +302,7 @@ public class XQuery {
      *
      * @return parent node
      */
-    public Optional<XQuery> parent() {
+    public @Nonnull Optional<XQuery> parent() {
         if (parent == null) {
             Node p = node.getParentNode();
             if (p != null) {
@@ -327,7 +331,7 @@ public class XQuery {
      * @return root node
      * @since 1.1
      */
-    public XQuery root() {
+    public @Nonnull XQuery root() {
         if (isRoot()) {
             return this;
         } else {
@@ -344,7 +348,7 @@ public class XQuery {
      * @throws IllegalArgumentException
      *             if the XPath expression was invalid
      */
-    private NodeList evaluate(String xpath) {
+    private @Nonnull NodeList evaluate(String xpath) {
         try {
             XPathExpression expr = xpf.newXPath().compile(xpath);
             return (NodeList) expr.evaluate(node, XPathConstants.NODESET);
@@ -361,7 +365,7 @@ public class XQuery {
      *            Iterator to apply
      * @return node that was found
      */
-    private Optional<XQuery> findElement(Function<Node, Node> iterator) {
+    private @Nonnull Optional<XQuery> findElement(Function<Node, Node> iterator) {
         Node it = node;
         do {
             it = iterator.apply(it);
