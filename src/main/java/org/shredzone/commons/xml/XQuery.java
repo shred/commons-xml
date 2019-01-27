@@ -260,6 +260,8 @@ public class XQuery {
     }
 
     /**
+     * Returns the tag name of this node.
+     *
      * @return this {@link XQuery} node's tag name.
      */
     public @Nonnull String name() {
@@ -267,6 +269,8 @@ public class XQuery {
     }
 
     /**
+     * Returns the text content of this node.
+     *
      * @return this {@link XQuery} node's text content, non recursively.
      */
     public @Nonnull String text() {
@@ -277,6 +281,8 @@ public class XQuery {
     }
 
     /**
+     * Returns the text content of the entire tree that is spawned by this node.
+     *
      * @return this {@link XQuery} node's text content, recursively.
      */
     public @Nonnull String allText() {
@@ -284,6 +290,8 @@ public class XQuery {
     }
 
     /**
+     * Returns a map of attributes.
+     *
      * @return a map of this node's attributes.
      */
     public @Nonnull Map<String, String> attr() {
