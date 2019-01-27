@@ -28,6 +28,7 @@ import java.io.StringReader;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -35,6 +36,8 @@ import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import javax.annotation.WillClose;
+import javax.annotation.concurrent.Immutable;
+import javax.annotation.concurrent.ThreadSafe;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -63,12 +66,14 @@ import org.xml.sax.SAXException;
  * @author Richard "Shred" Körber
  */
 @ParametersAreNonnullByDefault
+@Immutable
+@ThreadSafe
 public class XQuery {
 
     private final Node node;
     private final XPathFactory xpf = XPathFactory.newInstance();
-    private Optional<XQuery> parent = null;
-    private Map<String, String> attrMap = null;
+    private final AtomicReference<Optional<XQuery>> parent = new AtomicReference<>();
+    private final AtomicReference<Map<String, String>> attrMap = new AtomicReference<>();
 
     /**
      * Private constructor for a {@link Node} element.
@@ -282,18 +287,17 @@ public class XQuery {
      * @return a map of this node's attributes.
      */
     public @Nonnull Map<String, String> attr() {
-        if (attrMap == null) {
-            NamedNodeMap nnm = node.getAttributes();
-            if (nnm != null) {
-                attrMap = Collections.unmodifiableMap(
-                        IntStream.range(0, nnm.getLength())
-                            .mapToObj(nnm::item)
-                            .collect(toMap(Node::getNodeName, Node::getNodeValue)));
-            } else {
-                attrMap = Collections.emptyMap();
+        synchronized (this) {
+            if (attrMap.get() == null) {
+                attrMap.set(
+                    Optional.ofNullable(node.getAttributes())
+                        .map(XQuery::attributesToMap)
+                        .map(Collections::unmodifiableMap)
+                        .orElseGet(Collections::emptyMap)
+                );
             }
         }
-        return attrMap;
+        return attrMap.get();
     }
 
     /**
@@ -303,15 +307,12 @@ public class XQuery {
      * @return parent node
      */
     public @Nonnull Optional<XQuery> parent() {
-        if (parent == null) {
-            Node p = node.getParentNode();
-            if (p != null) {
-                parent = Optional.of(new XQuery(p));
-            } else {
-                parent = Optional.empty();
+        synchronized (this) {
+            if (parent.get() == null) {
+                parent.set(Optional.ofNullable(node.getParentNode()).map(XQuery::new));
             }
         }
-        return parent;
+        return parent.get();
     }
 
     /**
@@ -371,6 +372,18 @@ public class XQuery {
             it = iterator.apply(it);
         } while (it != null && !(it instanceof Element));
         return Optional.ofNullable(it).map(XQuery::new);
+    }
+
+    /**
+     * Converts a {@link NamedNodeMap} to a standard {@link Map} of attributes.
+     *
+     * @param nnm {@link NamedNodeMap} to convert
+     * @return {@link Map} of attributes and their values
+     */
+    private static @Nonnull Map<String, String> attributesToMap(NamedNodeMap nnm) {
+        return IntStream.range(0, nnm.getLength())
+                    .mapToObj(nnm::item)
+                    .collect(toMap(Node::getNodeName, Node::getNodeValue));
     }
 
 }
