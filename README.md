@@ -36,8 +36,8 @@ But _commons-xml_ offers a lot more possibilities. Just see the [online document
 
 ## Contribute
 
-* Fork the [Source code at GitHub](https://github.com/shred/commons-xml). Feel free to send pull requests.
-* Found a bug? [File a bug report!](https://github.com/shred/commons-xml/issues)
+* Fork the [Source code at Codeberg](https://codeberg.org/shred/commons-xml). Feel free to send pull requests.
+* Found a bug? [File a bug report!](https://codeberg.org/shred/commons-xml/issues)
 
 ## License
 

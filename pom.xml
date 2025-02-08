@@ -15,14 +15,14 @@
         </license>
     </licenses>
     <scm>
-        <url>https://github.com/shred/commons-xml/</url>
-        <connection>scm:git:git@github.com:shred/commons-xml.git</connection>
-        <developerConnection>scm:git:git@github.com:shred/commons-xml.git</developerConnection>
+        <url>https://codeberg.org/shred/commons-xml/</url>
+	<connection>scm:git:git@codeberg.org:shred/commons-xml.git</connection>
+        <developerConnection>scm:git:git@codeberg.org:shred/commons-xml.git</developerConnection>
       <tag>HEAD</tag>
   </scm>
     <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/shred/commons-xml/issues</url>
+        <system>Codeberg Issues</system>
+        <url>https://codeberg.org/shred/commons-xml/issues</url>
     </issueManagement>
     <developers>
         <developer>
